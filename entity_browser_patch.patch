@@ -1,0 +1,39 @@
+diff --git a/src/Plugin/EntityBrowser/Display/Modal.php b/src/Plugin/EntityBrowser/Display/Modal.php
+index 4312598..81eac7a 100644
+--- a/src/Plugin/EntityBrowser/Display/Modal.php
++++ b/src/Plugin/EntityBrowser/Display/Modal.php
+@@ -128,7 +128,7 @@ class Modal extends IFrame {
+     if (!empty($this->configuration['height']) && is_numeric($this->configuration['height']) && $this->configuration['height'] > 90) {
+       $content['#attributes']['height'] = $this->configuration['height'] - 90;
+     }
+-    $html = $this->renderer->render($content);
++    $html = \Drupal::service('renderer')->renderPlain($content);
+ 
+     $response = new AjaxResponse();
+     $response->addCommand(new OpenDialogCommand('#' . Html::getUniqueId($field_name . '-' . $element_name . '-dialog'), $this->configuration['link_text'], $html, [
+diff --git a/src/Plugin/EntityBrowser/Widget/View.php b/src/Plugin/EntityBrowser/Widget/View.php
+index 7512951..18dafef 100644
+--- a/src/Plugin/EntityBrowser/Widget/View.php
++++ b/src/Plugin/EntityBrowser/Widget/View.php
+@@ -145,7 +145,7 @@ class View extends WidgetBase implements ContainerFactoryPluginInterface {
+     }
+ 
+     $form['view']['view'] = [
+-      '#markup' => \Drupal::service('renderer')->render($form['view']['view']),
++      '#markup' => \Drupal::service('renderer')->renderPlain($form['view']['view']),
+     ];
+ 
+     return $form;
+diff --git a/src/Plugin/views/display/EntityBrowser.php b/src/Plugin/views/display/EntityBrowser.php
+index f4f7fbe..db060dc 100644
+--- a/src/Plugin/views/display/EntityBrowser.php
++++ b/src/Plugin/views/display/EntityBrowser.php
+@@ -200,7 +200,7 @@ class EntityBrowser extends DisplayPluginBase {
+       $row_id = $substitution['row_id'];
+ 
+       $search[] = $substitution['placeholder'];
+-      $replace[] = isset($element[$field_name][$row_id]) ? \Drupal::service('renderer')->render($element[$field_name][$row_id]) : '';
++      $replace[] = isset($element[$field_name][$row_id]) ? \Drupal::service('renderer')->renderPlain($element[$field_name][$row_id]) : '';
+     }
+     // Add in substitutions from hook_views_form_substitutions().
+     $substitutions = \Drupal::moduleHandler()->invokeAll('views_form_substitutions');
